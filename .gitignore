@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# 虚拟环境
+venv/
+.venv/
+env/
+.env/
+
+# 回测数据与结果（体积大，在每台机器上单独拉取/生成）
+data/*.csv
+data/*.json
+results/*.csv
+results/*.txt
+results/*.json
+
+# 环境与密钥（不要提交）
+.env
+.env.local
+*.pem
+
+# IDE / 编辑器
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+.DS_Store
+
+# 可选：保留 results 目录但忽略内容时，取消下面注释
+# results/
+# data/
