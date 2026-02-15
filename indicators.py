@@ -150,10 +150,12 @@ def compute_monthly_pivot(df_daily: pd.DataFrame) -> pd.DataFrame:
     权重: 当月100% / 前1月80% / 前2月60% / 前3月40% / 前4月25% / 前5月15%
     """
     df = df_daily.copy()
-    ts = df["timestamp"]
-    # 兼容: ms(13位) | 错误除过10^6的ms(7位) | s(10位)
-    if ts.max() < 1e9:
-        ts = ts * 1_000_000  # 恢复被错误除过的 ms
+    ts = df["timestamp"].astype("int64")
+    # 兼容: 纳秒(>1e15) | 毫秒(10^12~10^13) | 秒(10位) | 错误除过的ms(7位)
+    if ts.max() >= 1e15:
+        ts = ts // 10**6  # 纳秒 → 毫秒（如 data_fetcher 旧版或别处写入的）
+    elif ts.max() < 1e9:
+        ts = ts * 1_000_000
     elif ts.max() < 1e12:
         ts = ts * 1000  # 秒 → 毫秒
     df["date"] = pd.to_datetime(ts, unit="ms", utc=True)

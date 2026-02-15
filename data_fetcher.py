@@ -141,8 +141,8 @@ def aggregate_ohlcv(df: pd.DataFrame, rule: str) -> pd.DataFrame:
         .dropna()
     )
 
-    # 时区感知的 DatetimeIndex.astype("int64") 返回毫秒，无需再除
-    agg_df["timestamp"] = agg_df.index.astype("int64")
+    # pandas DatetimeIndex.astype("int64") 为纳秒，统一存为毫秒便于跨平台
+    agg_df["timestamp"] = (agg_df.index.astype("int64") // 10**6).astype("int64")
     agg_df = agg_df.reset_index(drop=True)
     return agg_df[["timestamp", "open", "high", "low", "close", "volume"]]
 
