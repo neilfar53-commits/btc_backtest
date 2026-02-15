@@ -4,6 +4,7 @@ BTC 交易策略回测系统 — 统计分析与可视化模块
 """
 
 import os
+import warnings
 from typing import List, Optional, Tuple
 
 import matplotlib.dates as mdates
@@ -14,9 +15,16 @@ import pandas as pd
 
 from config import INITIAL_BALANCE
 
-# 统一设置中文字体，避免图中中文变成乱码小方块
-mpl.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei", "DejaVu Sans"]
+# 统一设置中文字体：Windows 用黑体/雅黑，Mac 用苹方/黑体-简，避免中文变方框
+mpl.rcParams["font.sans-serif"] = [
+    "SimHei", "Microsoft YaHei",           # Windows
+    "PingFang SC", "Heiti SC", "STHeiti", "Arial Unicode MS",  # macOS
+    "DejaVu Sans",
+]
 mpl.rcParams["axes.unicode_minus"] = False
+
+# 抑制「缺少中文字形」的刷屏警告（Mac 默认 DejaVu 无中文时会报，图仍会保存）
+warnings.filterwarnings("ignore", message=".*Glyph.*missing from font.*", category=UserWarning)
 
 
 def generate_report(
